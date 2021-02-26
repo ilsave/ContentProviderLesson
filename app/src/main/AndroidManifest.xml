@@ -2,7 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.swtecnn.contentproviderlesson">
 
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <permission android:name="com.swtecnn.contentproviderlesson.READ_DATABASE"
+        android:protectionLevel="normal" />
+
+    <permission android:name="com.swtecnn.contentproviderlesson.WRITE_DATABASE"
+        android:protectionLevel="normal" />
+
 
     <application
         android:name=".CPApplication"
@@ -24,8 +29,11 @@
             </intent-filter>
         </activity>
         <provider android:authorities="com.swtecnn.contentproviderlesson.DbContentProvider"
-            android:name=".content_providers.DbContentProvider">
-        </provider>
+            android:name=".content_providers.DbContentProvider"
+            android:exported="true"
+            android:readPermission="com.swtecnn.contentproviderlesson.READ_DATABASE"
+            android:writePermission="com.swtecnn.contentproviderlesson.WRITE_DATABASE"
+        />
     </application>
 
 
