@@ -8,7 +8,9 @@ import java.sql.Date
 
 @Entity(tableName = "DiaryEntry")
 class DiaryEntry(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo
+    val id: Int,
     @ColumnInfo(name = "entry_text") var entryText: String?,
     @ColumnInfo(name = "entry_date") var entryDate: String?
 )
@@ -20,9 +22,17 @@ class DiaryEntry(
             }
             var diaryEntry: DiaryEntry? = null
             if (contentValues.containsKey("entry_text") && contentValues.containsKey("entry_date")) {
-                diaryEntry = DiaryEntry(0, "", "")
-                diaryEntry.entryText = contentValues.getAsString("entry_text")
-                diaryEntry.entryDate = contentValues.getAsString("entry_date")
+
+                //не колонка а ключ!
+                if (contentValues.getAsInteger("id") != 0) {
+                    diaryEntry = DiaryEntry(contentValues.getAsInteger("id"), "", "")
+                } else {
+                    diaryEntry = DiaryEntry(0, "", "")
+
+                }
+                    diaryEntry.entryText = contentValues.getAsString("entry_text")
+                    diaryEntry.entryDate = contentValues.getAsString("entry_date")
+
             }
             return diaryEntry
         }

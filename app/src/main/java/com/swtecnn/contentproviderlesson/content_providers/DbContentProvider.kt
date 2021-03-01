@@ -83,8 +83,7 @@ class DbContentProvider: ContentProvider() {
         val uriType = sUriMatcher.match(uri)
         val id: Long?
         when (uriType) {
-            DIARY_ENTRIES -> {
-                var deletedItem = selectionArgs?.get(0)
+            DIARY_ENTRY_ID -> {
                 id = uri.lastPathSegment?.toLong()
                 var cursor = id?.let { diaryEntryDao?.getById(it) }
                 if (cursor?.moveToNext()!!){
@@ -93,10 +92,10 @@ class DbContentProvider: ContentProvider() {
                     val diaryEntryDeleted = DiaryEntry(id!!.toInt(), textEntry, dateText)
                     diaryEntryDao?.delete(diaryEntryDeleted)
                 }
+                context?.contentResolver?.notifyChange(uri, null)
             }
             else -> throw UnsupportedOperationException()
         }
-        context?.contentResolver?.notifyChange(uri, null)
         return 1
     }
 
@@ -109,7 +108,7 @@ class DbContentProvider: ContentProvider() {
         val uriType = sUriMatcher.match(uri)
         val id: Long?
         when (uriType) {
-            DIARY_ENTRIES -> {
+            DIARY_ENTRY_ID -> {
                 id = uri.lastPathSegment?.toLong()
                 val newEntry = DiaryEntry.fromContentValues(values)!!
                 diaryEntryDao?.update(DiaryEntry(id!!.toInt(),newEntry.entryText, newEntry.entryDate))
